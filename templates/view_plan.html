@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ plan.name }} - Full Details</h2>
+<ul class="list-group">
+  {% for act in activities %}
+    <li class="list-group-item">
+      <b>{{ act.name }}</b><br>
+      L1: {{ act.level1 }} | L2: {{ act.level2 }} | L3: {{ act.level3 }}
+    </li>
+  {% endfor %}
+</ul>
+<a href="{{ url_for('dashboard') }}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+{% endblock %}

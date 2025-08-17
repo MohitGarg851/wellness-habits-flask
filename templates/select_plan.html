@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Choose Activities for {{ plan.name }}</h2>
+<form method="POST">
+  {% for act in activities %}
+  <div class="mb-3 border p-2 rounded">
+    <input type="checkbox" name="activities" value="{{ act.id }}">
+    <b>{{ act.name }}</b><br>
+    <label><input type="radio" name="level_{{ act.id }}" value="L1"> L1 - {{ act.level1 }}</label><br>
+    <label><input type="radio" name="level_{{ act.id }}" value="L2"> L2 - {{ act.level2 }}</label><br>
+    <label><input type="radio" name="level_{{ act.id }}" value="L3"> L3 - {{ act.level3 }}</label>
+  </div>
+  {% endfor %}
+  <button type="submit" class="btn btn-success">Lock My Plan</button>
+</form>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h2 class="mb-4">👤 Profile</h2>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">{{ user.username }}</h5>
+      <p class="card-text"><strong>Email:</strong> {{ user.email }}</p>
+      <p class="card-text"><strong>Joined:</strong> {{ user.created_at.strftime('%d %b %Y') if user.created_at else 'N/A' }}</p>
+      
+      {% if plan %}
+        <p class="card-text"><strong>Active Plan:</strong> {{ plan.name }}</p>
+        <a href="{{ url_for('my_plan') }}" class="btn btn-primary">View My Plan</a>
+      {% else %}
+        <p class="text-muted">No active plan yet.</p>
+        <a href="{{ url_for('plans') }}" class="btn btn-outline-primary">Choose a Plan</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

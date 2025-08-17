@@ -1,6 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Welcome, {{ name }} 👋</h2>
-<p>This is your dashboard. In future steps, you will see habits and scores here.</p>
-<a href="{{ url_for('logout') }}" class="btn btn-warning">Logout</a>
+<h2>Dashboard</h2>
+
+{% if plan %}
+  <h4>Active Plan: {{ plan.name }}</h4>
+  <a class="btn btn-info" href="{{ url_for('my_plan') }}">View My Plan</a>
+  <a class="btn btn-warning" href="{{ url_for('plans') }}">Modify Plan</a>
+  <a class="btn btn-secondary" href="{{ url_for('view_plan', plan_id=plan.id) }}">Plan Details</a>
+
+  <hr>
+  <h5>Activities</h5>
+  <ul>
+    {% for activity in activities %}
+      <li>{{ activity.activity.name }} (Level: {{ activity.level }})</li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <div class="alert alert-warning">No plan selected yet. Please choose one.</div>
+  <a class="btn btn-primary" href="{{ url_for('plans') }}">Select a Plan</a>
+{% endif %}
 {% endblock %}

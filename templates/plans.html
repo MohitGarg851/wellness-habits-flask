@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Available Plans</h2>
+<ul>
+  {% for plan in plans %}
+    <li>
+      {{ plan.name }}
+      <a href="{{ url_for('select_plan', plan_id=plan.id) }}" class="btn btn-sm btn-primary">Select</a>
+      <a href="{{ url_for('view_plan', plan_id=plan.id) }}" class="btn btn-sm btn-secondary">View</a>
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}
