@@ -1,5 +1,76 @@
 {% extends "base.html" %}
+
 {% block content %}
-<h2>About Wellness App</h2>
-<p>This app helps users build healthy habits by selecting wellness plans, tracking activities, and staying consistent.</p>
+<div class="container py-5">
+  <div class="row align-items-center">
+    <!-- Left: App Description -->
+    <div class="col-md-7">
+      <h1 class="mb-4 text-primary">About Wellness Habit Builder</h1>
+      <p class="lead">
+        Wellness Habit Builder is your personal guide to building a healthier,
+        more balanced lifestyle. We help you create <strong>daily habits</strong>
+        that stick – from mindful meditation and better meal timings to staying
+        active and sleeping on time.
+      </p>
+      <p>
+        The app adapts to your progress, assigns tasks, and scores your performance
+        so you can track your growth over time. Whether you're just starting or
+        aiming for advanced routines, our system will guide you step by step.
+      </p>
+      <ul class="list-unstyled mt-4">
+        <li>✅ Daily personalized wellness plans</li>
+        <li>✅ Progress tracking & scoring</li>
+        <li>✅ Gentle nudges & reminders</li>
+        <li>✅ AI-powered customization (coming soon 🚀)</li>
+      </ul>
+    </div>
+
+    <!-- Right: Illustration / Image -->
+    <div class="col-md-5 text-center">
+      <img src="https://img.freepik.com/free-vector/healthy-lifestyle-concept-illustration_114360-7142.jpg" 
+           alt="Wellness Illustration" class="img-fluid rounded shadow">
+    </div>
+  </div>
+
+  <!-- Mission Section -->
+  <div class="row mt-5">
+    <div class="col text-center">
+      <h2 class="text-success mb-3">Our Mission</h2>
+      <p class="fs-5">
+        We believe wellness isn’t about drastic changes. It’s about
+        <strong>small daily steps</strong> that transform into lifelong habits.
+        Our mission is to empower individuals to live healthier, happier, and more mindful lives.
+      </p>
+    </div>
+  </div>
+
+  <!-- Meet the Team Section -->
+  <div class="row mt-5">
+    <div class="col text-center">
+      <h2 class="text-primary mb-4">Meet the Team</h2>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <!-- Your Profile -->
+    <div class="col-md-4 text-center">
+      <div class="card shadow border-0">
+        <img src="https://img.freepik.com/free-icon/user_318-159711.jpg" 
+             class="card-img-top rounded-circle mx-auto mt-3" 
+             alt="Mohit Garg" style="width:150px; height:150px; object-fit:cover;">
+        <div class="card-body">
+          <h4 class="card-title">Mohit Garg</h4>
+          <p class="card-text text-muted">Founder & Data Scientist</p>
+          <p class="small">
+            Mohit is passionate about building AI-driven wellness solutions. With expertise in
+            data science and analytics, he is on a mission to empower people to lead healthier, happier lives.
+          </p>
+          <a href="https://www.linkedin.com/in/mohitgarg" class="btn btn-outline-primary btn-sm" target="_blank">
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
