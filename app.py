@@ -1,9 +1,10 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from models import db, bcrypt, User, Plan, Activity, UserActivity
+from models import db, User, Plan, Activity, UserActivity
 import importlib
 import os
 from forms import LoginForm, RegistrationForm
+from flask_bcrypt import Bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # ----------------- App Init -----------------
@@ -13,7 +14,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = "supersecretkey123"
 
 db.init_app(app)
-bcrypt.init_app(app)
+bcrypt = Bcrypt(app)
 
 # ----------------- Login Manager -----------------
 login_manager = LoginManager(app)
@@ -103,24 +104,50 @@ def select_plan(plan_id):
 
     if request.method == "POST":
         selected = request.form.getlist("activities")
-        levels = {a_id: request.form.get(f"level_{a_id}") for a_id in selected}
-
-        # clear old selections
-        UserActivity.query.filter_by(user_id=current_user.id).delete()
+        levels = {}
+        total_points = 0
 
         for a_id in selected:
-            ua = UserActivity(user_id=current_user.id,
-                              activity_id=int(a_id),
-                              level=levels[a_id])
+            level = request.form.get(f"level_{a_id}") or "L2"  # default recommended
+            levels[a_id] = level
+
+            if level == "L1":
+                total_points += 5
+            elif level == "L2":
+                total_points += 10
+            elif level == "L3":
+                total_points += 15
+
+        # --- Apply thresholds from plan ---
+        if len(selected) < plan.min_activities or \
+           (plan.max_activities and len(selected) > plan.max_activities):
+            flash(f"Select between {plan.min_activities} and {plan.max_activities} activities.", "danger")
+            return redirect(url_for("select_plan", plan_id=plan.id))
+
+        if total_points < plan.min_points or \
+           (plan.max_points and total_points > plan.max_points):
+            flash(f"Your plan must have at least {plan.min_points} points.", "danger")
+            return redirect(url_for("select_plan", plan_id=plan.id))
+
+        # save selections
+        UserActivity.query.filter_by(user_id=current_user.id).delete()
+        for a_id in selected:
+            ua = UserActivity(
+                user_id=current_user.id,
+                activity_id=int(a_id),
+                level=levels[a_id]
+            )
             db.session.add(ua)
 
-        # lock plan
         current_user.plan = plan
         db.session.commit()
+
         flash("Plan locked successfully!", "success")
         return redirect(url_for("my_plan"))
 
+    # ✅ GET request → show form
     return render_template("select_plan.html", plan=plan, activities=activities)
+
 
 @app.route("/my_plan")
 @login_required
@@ -156,7 +183,13 @@ if __name__ == "__main__":
                     module_name = filename[:-3]
                     module = importlib.import_module(f"plans.{module_name}")
 
-                    plan = Plan(name=module.plan_name)
+                    plan = Plan(
+                        name=module.plan_name,
+                        min_activities=getattr(module, "min_activities", 1),
+                        max_activities=getattr(module, "max_activities", None),
+                        min_points=getattr(module, "min_points", 0),
+                        max_points=getattr(module, "max_points", None),
+                    )
                     db.session.add(plan)
                     db.session.commit()
 
@@ -166,6 +199,7 @@ if __name__ == "__main__":
                             level1=act["level1"],
                             level2=act["level2"],
                             level3=act["level3"],
+                            recommended=act.get("recommended"),  # NEW field
                             plan=plan
                         )
                         db.session.add(activity)
