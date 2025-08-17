@@ -10,12 +10,21 @@
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/">Wellness App</a>
-      <div class="collapse navbar-collapse">
+      <a class="navbar-brand" href="{{ url_for('home') }}">Wellness App</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
-        </ul>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Home</a></li>
+{% if current_user.is_authenticated %}
+    <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url_for('profile') }}">Profile</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+  {% else %}
+    <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Login / Register</a></li>
+  {% endif %}
+  <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About</a></li>
       </div>
     </div>
   </nav>
@@ -24,5 +33,7 @@
   <div class="container mt-4">
     {% block content %}{% endblock %}
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
