@@ -4,66 +4,69 @@
 
 plan_name = "Plan A - Starter Wellness"
 
-# 10 activities with 3-level progression
-activities = [
-    {
-        "name": "Meditation",
-        "level1": "5 minutes (basic breathing)",
-        "level2": "10 minutes (guided meditation)",
-        "level3": "15+ minutes (deep meditation)"
-    },
+plan_name = "Plan A - Starter Wellness"
+
+# thresholds
+min_activities = 6
+max_activities = 8
+min_points = 60
+max_points = None   # None = no upper limit
+
+activities = [ 
     {
         "name": "Morning Walk",
-        "level1": "10 minutes",
-        "level2": "20 minutes",
-        "level3": "30+ minutes brisk walk"
+        "level1": "10 min walk (5 pts)",
+        "level2": "20 min walk (10 pts)",   # Recommended
+        "level3": "30 min walk (15 pts)",
+        "recommended": "L2",
     },
     {
         "name": "Yoga / Stretching",
-        "level1": "10 minutes light stretching",
-        "level2": "20 minutes yoga flow",
-        "level3": "30+ minutes advanced yoga"
+        "level1": "5 min light stretch (5 pts)",
+        "level2": "15 min yoga (10 pts)",   # Recommended
+        "level3": "30 min yoga (15 pts)",
+        "recommended": "L2",
     },
     {
         "name": "Sleep Hygiene",
-        "level1": "6 hours",
-        "level2": "7 hours",
-        "level3": "8+ hours, no screens before bed"
+        "level1": "Sleep 6 hrs (5 pts)",
+        "level2": "Sleep 7 hrs (10 pts)",   # Recommended
+        "level3": "Sleep 8+ hrs (15 pts)",
+        "recommended": "L2",
     },
     {
         "name": "Screen-Free Time",
-        "level1": "15 minutes (no phone)",
-        "level2": "30 minutes (no phone/TV)",
-        "level3": "1+ hour full digital detox"
+        "level1": "No screens 15 min before bed (5 pts)",
+        "level2": "No screens 30 min before bed (10 pts)",   # Recommended
+        "level3": "No screens 1 hr before bed (15 pts)",
+        "recommended": "L2",
     },
     {
         "name": "Mindful Eating",
-        "level1": "One meal without distractions",
-        "level2": "Two meals without distractions",
-        "level3": "All meals mindfully, no screens"
+        "level1": "1 mindful meal (5 pts)",
+        "level2": "2 mindful meals (10 pts)",   # Recommended
+        "level3": "3 mindful meals (15 pts)",
+        "recommended": "L2",
     },
     {
         "name": "Hydration",
-        "level1": "5 glasses of water",
-        "level2": "7 glasses of water",
-        "level3": "8+ glasses of water"
+        "level1": "Drink 1.5L water (5 pts)",
+        "level2": "Drink 2L water (10 pts)",   # Recommended
+        "level3": "Drink 3L water (15 pts)",
+        "recommended": "L2",
     },
     {
         "name": "Cardio / Exercise",
-        "level1": "15 minutes light cardio (walk, cycle)",
-        "level2": "30 minutes cardio",
-        "level3": "45+ minutes intense cardio"
-    },
-    {
-        "name": "Gratitude Journal",
-        "level1": "Write 1 thing you’re grateful for",
-        "level2": "Write 3 things you’re grateful for",
-        "level3": "Write 5 things with reflection"
+        "level1": "10 min cardio/exercise (5 pts)",
+        "level2": "20 min cardio/exercise (10 pts)",   # Recommended
+        "level3": "30+ min cardio/exercise (15 pts)",
+        "recommended": "L2",
     },
     {
         "name": "Healthy Dinner",
-        "level1": "Avoid junk food at dinner",
-        "level2": "Eat before 9 pm",
-        "level3": "Eat before 8 pm, balanced meal"
-    },
+        "level1": "Dinner before 9 PM (5 pts)",
+        "level2": "Dinner before 8 PM (10 pts)",   # Recommended
+        "level3": "Light/early dinner before 7:30 PM (15 pts)",
+        "recommended": "L2",
+    }
 ]

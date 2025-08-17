@@ -1,13 +1,38 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>{{ plan.name }} - Full Details</h2>
-<ul class="list-group">
-  {% for act in activities %}
-    <li class="list-group-item">
-      <b>{{ act.name }}</b><br>
-      L1: {{ act.level1 }} | L2: {{ act.level2 }} | L3: {{ act.level3 }}
-    </li>
-  {% endfor %}
-</ul>
-<a href="{{ url_for('dashboard') }}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+<div class="container">
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h2 class="card-title text-primary">{{ plan.name }} – Full Details</h2>
+      <p class="text-muted">Below are all activities with their level variations.</p>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Activity</th>
+          <th scope="col">Level 1</th>
+          <th scope="col">Level 2</th>
+          <th scope="col">Level 3</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for act in activities %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td><strong>{{ act.name }}</strong></td>
+          <td><span class="badge bg-success">{{ act.level1 }}</span></td>
+          <td><span class="badge bg-warning text-dark">{{ act.level2 }}</span></td>
+          <td><span class="badge bg-danger">{{ act.level3 }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary mt-3">⬅ Back to Dashboard</a>
+</div>
 {% endblock %}

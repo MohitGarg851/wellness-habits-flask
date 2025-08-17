@@ -1,16 +1,47 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>My Plan</h2>
+<h2 class="mb-4 text-center">🌿 My Wellness Plan</h2>
 
-{% if plan %}
-  <h4>{{ plan.name }}</h4>
-  <ul>
-    {% for activity in activities %}
-      <li>{{ activity.activity.name }} (Level: {{ activity.level }})</li>
-    {% endfor %}
-  </ul>
-{% else %}
-  <p>No active plan selected.</p>
-  <a href="{{ url_for('plans') }}" class="btn btn-primary">Select a Plan</a>
-{% endif %}
+<div class="card shadow-lg">
+  <div class="card-header bg-success text-white">
+    <h4 class="mb-0">{{ plan.name }}</h4>
+  </div>
+  <div class="card-body">
+    <p class="text-muted">
+      Your personalized plan is locked. Here are the activities you’ll be following:
+    </p>
+
+    <!-- Activities Grid -->
+    <div class="row">
+      {% for ua in activities %}
+      <div class="col-md-6 mb-3">
+        <div class="card border-success h-100 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">{{ ua.activity.name }}</h5>
+            <p class="card-text">
+              <span class="badge bg-primary">Level: {{ ua.level }}</span>
+            </p>
+
+            <!-- Small fun icon per level -->
+            {% if ua.level == "L1" %}
+              <span class="text-success">🌱 Beginner Focus</span>
+            {% elif ua.level == "L2" %}
+              <span class="text-warning">💪 Recommended Challenge</span>
+            {% else %}
+              <span class="text-danger">🔥 Intensive</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Buttons -->
+<div class="mt-4 d-flex justify-content-center gap-2">
+  <a href="{{ url_for('plans') }}" class="btn btn-outline-primary">➕ Add / Change Plan</a>
+  <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">⬅ Back to Dashboard</a>
+</div>
+
 {% endblock %}

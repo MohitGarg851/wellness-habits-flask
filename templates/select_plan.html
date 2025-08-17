@@ -1,16 +1,126 @@
-{% extends "base.html" %}
+{% extends "base.html" %} 
 {% block content %}
 <h2>Choose Activities for {{ plan.name }}</h2>
-<form method="POST">
+
+<div class="alert alert-info">
+  Select between <b>{{ plan.min_activities }}–{{ plan.max_activities }}</b> activities.  
+  Each activity gives: L1 = 5 pts, L2 = 10 pts (Recommended), L3 = 15 pts.  
+  <br>
+  <b>Minimum points required: {{ plan.min_points }}</b>
+</div>
+
+<!-- Live Counter & Status -->
+<div class="mb-3">
+  <span class="badge bg-primary">
+    Activities Selected: <span id="activityCount">0</span>/{{ plan.max_activities }}
+  </span>
+  <span class="badge bg-success">
+    Total Points: <span id="totalPoints">0</span>
+  </span>
+  <div id="validationMessage" class="mt-2 text-danger fw-bold"></div>
+</div>
+
+<form method="POST" id="planForm">
   {% for act in activities %}
-  <div class="mb-3 border p-2 rounded">
-    <input type="checkbox" name="activities" value="{{ act.id }}">
-    <b>{{ act.name }}</b><br>
-    <label><input type="radio" name="level_{{ act.id }}" value="L1"> L1 - {{ act.level1 }}</label><br>
-    <label><input type="radio" name="level_{{ act.id }}" value="L2"> L2 - {{ act.level2 }}</label><br>
-    <label><input type="radio" name="level_{{ act.id }}" value="L3"> L3 - {{ act.level3 }}</label>
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="form-check">
+        <input class="form-check-input activity-checkbox" type="checkbox" 
+               name="activities" value="{{ act.id }}" id="act{{ act.id }}">
+        <label class="form-check-label fw-bold" for="act{{ act.id }}">
+          {{ act.name }}
+        </label>
+      </div>
+
+      <!-- Levels -->
+      <div class="ms-3 mt-2">
+        <div class="form-check">
+          <input class="form-check-input level-radio" type="radio" 
+                 name="level_{{ act.id }}" value="L1" data-points="5">
+          <label class="form-check-label">L1 – {{ act.level1 }} (5 pts)</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input level-radio" type="radio" 
+                 name="level_{{ act.id }}" value="L2" data-points="10">
+          <label class="form-check-label">
+            L2 – {{ act.level2 }} 
+            <span class="badge bg-warning text-dark">Recommended</span> (10 pts)
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input level-radio" type="radio" 
+                 name="level_{{ act.id }}" value="L3" data-points="15">
+          <label class="form-check-label">L3 – {{ act.level3 }} (15 pts)</label>
+        </div>
+      </div>
+    </div>
   </div>
   {% endfor %}
-  <button type="submit" class="btn btn-success">Lock My Plan</button>
+
+  <button type="submit" id="submitBtn" class="btn btn-success" disabled>
+    Lock My Plan
+  </button>
 </form>
+
+<!-- JS for live counter & validation -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const checkboxes = document.querySelectorAll(".activity-checkbox");
+  const radios = document.querySelectorAll(".level-radio");
+  const activityCount = document.getElementById("activityCount");
+  const totalPoints = document.getElementById("totalPoints");
+  const validationMessage = document.getElementById("validationMessage");
+  const submitBtn = document.getElementById("submitBtn");
+
+  // ✅ thresholds from backend with safe fallback
+  const minActivities = {{ plan.min_activities|tojson or 6 }};
+  const maxActivities = {{ plan.max_activities|tojson or 8 }};
+  const minPoints = {{ plan.min_points|tojson or 60 }};
+
+  function updateCounters() {
+    let count = 0;
+    let points = 0;
+
+    checkboxes.forEach(cb => {
+      if (cb.checked) {
+        count++;
+        const levelRadios = document.querySelectorAll(`input[name="level_${cb.value}"]`);
+        let selected = false;
+        levelRadios.forEach(radio => {
+          if (radio.checked) {
+            points += parseInt(radio.dataset.points);
+            selected = true;
+          }
+        });
+        // If no level selected → default L2 (recommended)
+        if (!selected) {
+          points += 10;
+        }
+      }
+    });
+
+    activityCount.textContent = count;
+    totalPoints.textContent = points;
+
+    // ✅ Dynamic validation
+    if (count < minActivities) {
+      validationMessage.textContent = `⚠️ Please select at least ${minActivities} activities.`;
+      submitBtn.disabled = true;
+    } else if (count > maxActivities) {
+      validationMessage.textContent = `⚠️ You can select a maximum of ${maxActivities} activities.`;
+      submitBtn.disabled = true;
+    } else if (points < minPoints) {
+      validationMessage.textContent = `⚠️ Total points must be at least ${minPoints}.`;
+      submitBtn.disabled = true;
+    } else {
+      validationMessage.textContent = "";
+      submitBtn.disabled = false;
+    }
+  }
+
+  checkboxes.forEach(cb => cb.addEventListener("change", updateCounters));
+  radios.forEach(r => r.addEventListener("change", updateCounters));
+});
+</script>
+
 {% endblock %}
