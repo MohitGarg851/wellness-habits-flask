@@ -1,22 +1,105 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Dashboard</h2>
+<div class="container mt-4">
 
-{% if plan %}
-  <h4>Active Plan: {{ plan.name }}</h4>
-  <a class="btn btn-info" href="{{ url_for('my_plan') }}">View My Plan</a>
-  <a class="btn btn-warning" href="{{ url_for('plans') }}">Modify Plan</a>
-  <a class="btn btn-secondary" href="{{ url_for('view_plan', plan_id=plan.id) }}">Plan Details</a>
+  <!-- Accordion Wrapper -->
+  <div class="accordion shadow" id="dashboardAccordion">
 
-  <hr>
-  <h5>Activities</h5>
-  <ul>
-    {% for activity in activities %}
-      <li>{{ activity.activity.name }} (Level: {{ activity.level }})</li>
-    {% endfor %}
-  </ul>
-{% else %}
-  <div class="alert alert-warning">No plan selected yet. Please choose one.</div>
-  <a class="btn btn-primary" href="{{ url_for('plans') }}">Select a Plan</a>
-{% endif %}
+    <!-- Daily Logger Accordion -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingLog">
+        <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLog" aria-expanded="true" aria-controls="collapseLog">
+          📝 Daily Log
+        </button>
+      </h2>
+      <div id="collapseLog" class="accordion-collapse collapse show" aria-labelledby="headingLog" data-bs-parent="#dashboardAccordion">
+        <div class="accordion-body">
+
+          <form method="POST" action="{{ url_for('dashboard') }}">
+            <!-- Date Selector -->
+            <div class="mb-3">
+              <label for="log_date" class="form-label fw-bold">Log Date</label>
+              <input type="date" id="log_date" name="log_date" class="form-control" value="{{ today }}">
+            </div>
+
+            <!-- Activities -->
+            {% for ua in activities %}
+            <div class="card mb-3 border-primary">
+              <div class="card-body">
+                <h5 class="card-title">{{ ua.activity.name }}</h5>
+
+                <!-- Radio Options Styled -->
+                <div class="btn-group d-flex" role="group">
+                  <input type="radio" class="btn-check" name="activity_{{ ua.activity.id }}" value="not_done" id="notdone_{{ ua.activity.id }}" checked>
+                  <label class="btn btn-outline-danger flex-fill" for="notdone_{{ ua.activity.id }}">❌ Not Done</label>
+
+                  <input type="radio" class="btn-check" name="activity_{{ ua.activity.id }}" value="L1" id="L1_{{ ua.activity.id }}">
+                  <label class="btn btn-outline-success flex-fill" for="L1_{{ ua.activity.id }}">L1: {{ ua.activity.level1 }}</label>
+
+                  <input type="radio" class="btn-check" name="activity_{{ ua.activity.id }}" value="L2" id="L2_{{ ua.activity.id }}">
+                  <label class="btn btn-outline-primary flex-fill" for="L2_{{ ua.activity.id }}">L2: {{ ua.activity.level2 }}</label>
+
+                  <input type="radio" class="btn-check" name="activity_{{ ua.activity.id }}" value="L3" id="L3_{{ ua.activity.id }}">
+                  <label class="btn btn-outline-dark flex-fill" for="L3_{{ ua.activity.id }}">L3: {{ ua.activity.level3 }}</label>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+
+            <!-- Submit -->
+            <button type="submit" class="btn btn-lg btn-success w-100 mt-3">💾 Save Log</button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Daily Summary Accordion -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingSummary">
+        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSummary" aria-expanded="false" aria-controls="collapseSummary">
+          📊 View Daily Summary
+        </button>
+      </h2>
+      <div id="collapseSummary" class="accordion-collapse collapse" aria-labelledby="headingSummary" data-bs-parent="#dashboardAccordion">
+        <div class="accordion-body">
+          <table class="table table-striped table-hover">
+            <thead class="table-dark">
+              <tr>
+                <th>Date</th>
+                {% for ua in activities %}
+                  <th>{{ ua.activity.name }}</th>
+                {% endfor %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for log_date, logs in summary.items() %}
+              <tr>
+                <td>{{ log_date }}</td>
+                {% for ua in activities %}
+                  <td>
+                    {% set status = logs.get(ua.activity.id, "Not Logged") %}
+                    {% if status == "not_done" %}
+                      <span class="badge bg-danger">Not Done</span>
+                    {% elif status == "L1" %}
+                      <span class="badge bg-success">Beginner (L1)</span>
+                    {% elif status == "L2" %}
+                      <span class="badge bg-primary">Intermediate (L2)</span>
+                    {% elif status == "L3" %}
+                      <span class="badge bg-dark">Extensive (L3)</span>
+                    {% else %}
+                      <span class="badge bg-secondary">Not Logged</span>
+                    {% endif %}
+                  </td>
+                {% endfor %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
 {% endblock %}
