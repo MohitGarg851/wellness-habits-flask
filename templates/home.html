@@ -43,7 +43,6 @@
                         <!-- Login Form -->
                         <div class="tab-pane fade show active" id="login" role="tabpanel">
                             <form method="POST">
-                                {{ login_form.hidden_tag() }}
                                 <div class="mb-3">
                                     {{ login_form.email.label(class="form-label") }}
                                     {{ login_form.email(class="form-control") }}
@@ -52,14 +51,13 @@
                                     {{ login_form.password.label(class="form-label") }}
                                     {{ login_form.password(class="form-control") }}
                                 </div>
-                                {{ login_form.submit(class="btn btn-primary w-100") }}
+                                <button type="submit" name="login-submit" class="btn btn-primary w-100">Login</button>
                             </form>
                         </div>
 
                         <!-- Register Form -->
                         <div class="tab-pane fade" id="register" role="tabpanel">
                             <form method="POST">
-                                {{ register_form.hidden_tag() }}
                                 <div class="mb-3">
                                     {{ register_form.username.label(class="form-label") }}
                                     {{ register_form.username(class="form-control") }}
@@ -76,7 +74,7 @@
                                     {{ register_form.confirm_password.label(class="form-label") }}
                                     {{ register_form.confirm_password(class="form-control") }}
                                 </div>
-                                {{ register_form.submit(class="btn btn-success w-100") }}
+                                <button type="submit" name="register-submit" class="btn btn-success w-100">Register</button>
                             </form>
                         </div>
                     </div>
