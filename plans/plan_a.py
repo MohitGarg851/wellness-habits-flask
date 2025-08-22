@@ -1,9 +1,6 @@
 # -------------------------------
 # Plan A: Starter Wellness Program
 # -------------------------------
-
-plan_name = "Plan A - Starter Wellness"
-
 plan_name = "Plan A - Starter Wellness"
 
 # thresholds
