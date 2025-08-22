@@ -13,6 +13,8 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), nullable=False, unique=True)
     password = db.Column(db.String(150), nullable=False)
 
+    bio = db.Column(db.Text, nullable=True)
+
     # FK → one plan per user
     plan_id = db.Column(db.Integer, db.ForeignKey("plan.id"))
     plan_start_date = db.Column(db.Date, nullable=True)
@@ -34,6 +36,8 @@ class Plan(db.Model):
     max_activities = db.Column(db.Integer, default=6)
     min_points = db.Column(db.Integer, default=30)
     max_points = db.Column(db.Integer, default=90)
+
+    duration_days = db.Column(db.Integer, nullable=False, default=30)
 
     # A plan has many activities
     activities = db.relationship("Activity", backref="plan", lazy=True)
@@ -74,10 +78,22 @@ class UserActivity(db.Model):
 # ------------------------
 # DailyLog Model
 # ------------------------
+POINTS_MAPPING = {
+    "not_done": 0,
+    "L1": 5,
+    "L2": 10,
+    "L3": 15
+}
+
+
 class DailyLog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     activity_id = db.Column(db.Integer, db.ForeignKey("activity.id"), nullable=False)
     log_date = db.Column(db.Date, default=date.today, nullable=False)
-    status = db.Column(db.String(20), default="not_done")  # "done", "skipped"
+    status = db.Column(db.String(20), default="not_done")  # "not_done", "L1", "L2", "L3"
     notes = db.Column(db.Text, nullable=True)
+
+    def get_points(self):
+        """Return points for this log based on status."""
+        return POINTS_MAPPING.get(self.status, 0)

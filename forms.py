@@ -42,3 +42,9 @@ class DailyLogForm(Form):
     )
     notes = TextAreaField("Notes (optional)")
     submit = SubmitField("Save Log")
+
+class EditProfileForm(Form):
+    username = StringField("Username", validators=[DataRequired(), Length(min=3, max=50)])
+    email = StringField("Email", validators=[DataRequired(), Email(), Length(max=120)])
+    bio = TextAreaField("Bio", validators=[Length(max=250)])
+    submit = SubmitField("Save Changes")
